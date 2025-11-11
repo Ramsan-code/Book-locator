@@ -57,7 +57,7 @@ const emailTemplates = {
             <h1> Welcome to BookLink!</h1>
           </div>
           <div class="content">
-            <h2>Hello ${userName}! 👋</h2>
+            <h2>Hello ${userName}! </h2>
             <p>Great news! Your BookLink account has been approved by our admin team.</p>
             
             <p><strong>You can now:</strong></p>
@@ -167,7 +167,7 @@ const emailTemplates = {
             <h1> Book Approved!</h1>
           </div>
           <div class="content">
-            <h2>Hello ${userName}! 👋</h2>
+            <h2>Hello ${userName}! </h2>
             <p>Excellent news! Your book listing has been approved and is now live on BookLink.</p>
             
             <p><strong>Book Title:</strong> ${bookTitle}</p>
@@ -262,7 +262,7 @@ const emailTemplates = {
 
   // Transaction notification
   transactionCreated: (sellerName, buyerName, bookTitle, transactionType, price) => ({
-    subject: `🔔 New ${transactionType} Request: "${bookTitle}"`,
+    subject: ` New ${transactionType} Request: "${bookTitle}"`,
     html: `
       <!DOCTYPE html>
       <html>
@@ -280,10 +280,10 @@ const emailTemplates = {
       <body>
         <div class="container">
           <div class="header">
-            <h1>💰 New Transaction!</h1>
+            <h1> New Transaction!</h1>
           </div>
           <div class="content">
-            <h2>Hello ${sellerName}! 👋</h2>
+            <h2>Hello ${sellerName}! </h2>
             <p>You have a new ${transactionType.toLowerCase()} request for your book!</p>
             
             <div class="transaction-details">
@@ -446,7 +446,7 @@ export const sendBulkEmails = async (recipients, template, data) => {
   const successful = results.filter((r) => r.status === "fulfilled").length;
   const failed = results.filter((r) => r.status === "rejected").length;
   
-  console.log(`📊 Bulk email results: ${successful} sent, ${failed} failed`);
+  console.log(` Bulk email results: ${successful} sent, ${failed} failed`);
   
   return { successful, failed, results };
 };

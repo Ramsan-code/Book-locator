@@ -34,7 +34,7 @@ export const createTransaction = async (req, res, next) => {
       { path: "book", select: "title" },
     ]);
 
-    // 📧 Send notification email to seller
+    //  Send notification email to seller
     await sendEmail(book.owner.email, "transactionCreated", {
       sellerName: book.owner.name,
       buyerName: transaction.buyer.name,
