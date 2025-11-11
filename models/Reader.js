@@ -20,6 +20,30 @@ const readerSchema = new mongoose.Schema(
       minlength: 6,
       select: false,
     },
+    // ✨ NEW: Role field for admin system
+    role: {
+      type: String,
+      enum: ["user", "moderator", "admin"],
+      default: "user",
+    },
+    // ✨ NEW: Approval status
+    isApproved: {
+      type: Boolean,
+      default: false, // Users need approval by default
+    },
+    // ✨ NEW: Account status
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+    // ✨ NEW: Approval details
+    approvedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Reader",
+    },
+    approvedAt: {
+      type: Date,
+    },
     location: {
       type: {
         type: String,
@@ -27,16 +51,21 @@ const readerSchema = new mongoose.Schema(
         default: "Point",
       },
       coordinates: {
-  type: [Number],
-  default: [0, 0],
-},
+        type: [Number],
+        default: [0, 0],
+      },
     },
     bio: String,
     avatar: String,
+    // ✨ NEW: Track last login
+    lastLogin: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );
 
+// Hash password before saving
 readerSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   const salt = await bcrypt.genSalt(10);
@@ -44,11 +73,27 @@ readerSchema.pre("save", async function (next) {
   next();
 });
 
+// Compare password method
 readerSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
+// ✨ NEW: Check if user is admin
+readerSchema.methods.isAdmin = function () {
+  return this.role === "admin";
+};
+
+// ✨ NEW: Check if user is moderator or admin
+readerSchema.methods.isModerator = function () {
+  return this.role === "moderator" || this.role === "admin";
+};
+
+// Index for geospatial queries
 readerSchema.index({ location: "2dsphere" });
+
+// Index for faster role queries
+readerSchema.index({ role: 1 });
+readerSchema.index({ isApproved: 1 });
 
 const Reader = mongoose.model("Reader", readerSchema);
 export default Reader;

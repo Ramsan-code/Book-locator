@@ -1,6 +1,8 @@
 import Reader from "../models/Reader.js";
 import bcrypt from "bcryptjs";
 import generateToken from "../utils/generateToken.js";
+import { sendEmail } from "../services/emailService.js";
+
 export const getAllReaders = async (req, res) => {
   try {
     const readers = await Reader.find().select("-password"); 
@@ -9,6 +11,8 @@ export const getAllReaders = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// ✨ UPDATED: Register with welcome email
 export const registerReader = async (req, res, next) => {
   try {
     const { name, email, password, location } = req.body;
@@ -20,11 +24,20 @@ export const registerReader = async (req, res, next) => {
     const reader = await Reader.create({ name, email, password, location });
     const token = generateToken(reader._id);
 
+    // 📧 Send welcome email
+    await sendEmail(email, "welcomeEmail", {
+      userName: name,
+      userEmail: email,
+    });
+
     res.status(201).json({
       _id: reader._id,
       name: reader.name,
       email: reader.email,
+      role: reader.role,
+      isApproved: reader.isApproved,
       token,
+      message: "Registration successful! Please wait for admin approval.",
     });
   } catch (error) {
     next(error);
@@ -43,12 +56,19 @@ export const loginReader = async (req, res, next) => {
     if (!isMatch)
       return res.status(401).json({ message: "Invalid credentials" });
 
+    // Update last login
+    reader.lastLogin = new Date();
+    await reader.save();
+
     const token = generateToken(reader._id);
 
     res.json({
       _id: reader._id,
       name: reader.name,
       email: reader.email,
+      role: reader.role,
+      isApproved: reader.isApproved,
+      isActive: reader.isActive,
       token,
     });
   } catch (error) {

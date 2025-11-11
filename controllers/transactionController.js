@@ -1,6 +1,8 @@
 import Transaction from "../models/Transaction.js";
 import Book from "../models/Book.js";
+import { sendEmail } from "../services/emailService.js";
 
+// ✨ UPDATED: Create transaction with email notification to seller
 export const createTransaction = async (req, res, next) => {
   try {
     const { bookId, type, rentDurationDays } = req.body;
@@ -26,8 +28,23 @@ export const createTransaction = async (req, res, next) => {
     book.available = false;
     await book.save();
 
+    // Populate transaction for email
+    await transaction.populate([
+      { path: "buyer", select: "name email" },
+      { path: "book", select: "title" },
+    ]);
+
+    // 📧 Send notification email to seller
+    await sendEmail(book.owner.email, "transactionCreated", {
+      sellerName: book.owner.name,
+      buyerName: transaction.buyer.name,
+      bookTitle: transaction.book.title,
+      transactionType: type,
+      price: book.price,
+    });
+
     res.status(201).json({
-      message: "Transaction created successfully",
+      message: "Transaction created successfully. Seller has been notified.",
       transaction,
     });
   } catch (error) {

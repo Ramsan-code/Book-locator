@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db.js";
 import {errorHandler,notFound} from "./middleware/errorHandler.js"
+import adminRouter from "./routes/adminRouter.js"
 
 dotenv.config();
 const app = express();
@@ -20,8 +21,10 @@ app.use("/api/readers", readerRouter);
 app.use("/api/books", bookRouter);
 app.use("/api/reviews", reviewRouter);
 app.use("/api/transactions", transactionRouter);
+app.use("/api/admin",adminRouter);
 app.use(errorHandler)
 app.use(notFound)
+
 
 app.get("/", (req, res) => {
   res.send("Hello Express!");

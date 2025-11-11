@@ -52,11 +52,44 @@ const bookSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    // ✨ NEW: Approval system for books
+    isApproved: {
+      type: Boolean,
+      default: false, // Books need admin approval
+    },
+    approvalStatus: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
+    },
+    approvedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Reader",
+    },
+    approvedAt: {
+      type: Date,
+    },
+    rejectionReason: {
+      type: String,
+    },
+    // ✨ NEW: Featured by admin
+    isFeatured: {
+      type: Boolean,
+      default: false,
+    },
+    // ✨ NEW: Views counter
+    views: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
 
 bookSchema.index({ location: "2dsphere" });
+bookSchema.index({ isApproved: 1 });
+bookSchema.index({ approvalStatus: 1 });
+bookSchema.index({ isFeatured: 1 });
 
 const Book = mongoose.model("Book", bookSchema);
 export default Book;
