@@ -1,9 +1,9 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import connectDB from "./config/db.js";
-import {errorHandler,notFound} from "./middleware/errorHandler.js"
-import adminRouter from "./routes/adminRouter.js"
+import connectDB from "./src/config/db.js";
+import {errorHandler,notFound} from "./src/middleware/errorHandler.js"
+import adminRouter from "./src/routes/adminRouter.js"
 
 dotenv.config();
 const app = express();
@@ -12,10 +12,10 @@ app.use(express.json());
 app.use(cors());
 connectDB();
 
-import readerRouter from "./routes/readerRouter.js";
-import bookRouter from "./routes/bookRouter.js";
-import reviewRouter from "./routes/reviewRouter.js";
-import transactionRouter from "./routes/transactionRouter.js";
+import readerRouter from "./src/routes/readerRouter.js";
+import bookRouter from "./src/routes/bookRouter.js";
+import reviewRouter from "./src/routes/reviewRouter.js";
+import transactionRouter from "./src/routes/transactionRouter.js";
 
 app.use("/api/readers", readerRouter);
 app.use("/api/books", bookRouter);
