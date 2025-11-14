@@ -19,24 +19,6 @@ export const isAdmin = (req, res, next) => {
 };
 
 /**
- * Middleware to check if user is moderator or admin
- * Must be used after protect middleware
- */
-export const isModerator = (req, res, next) => {
-  if (!req.user) {
-    return next(new AppError("Authentication required", 401));
-  }
-
-  if (req.user.role !== "admin" && req.user.role !== "moderator") {
-    return next(
-      new AppError("Access denied. Moderator privileges required.", 403)
-    );
-  }
-
-  next();
-};
-
-/**
  * Middleware to check if user account is approved
  * Must be used after protect middleware
  */
@@ -45,8 +27,8 @@ export const isApproved = (req, res, next) => {
     return next(new AppError("Authentication required", 401));
   }
 
-  // Admins and moderators are always approved
-  if (req.user.role === "admin" || req.user.role === "moderator") {
+  // Admins are always approved
+  if (req.user.role === "admin") {
     return next();
   }
 

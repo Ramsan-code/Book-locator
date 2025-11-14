@@ -9,7 +9,7 @@ dotenv.config();
 const adminUsers = [
   {
     name: "Super Admin",
-    email: "admin@booklink.com",
+    email: "admin@booklocator.com",
     password: "Admin@123456", // Will be hashed automatically by the model
     role: "admin",
     isApproved: true,
@@ -18,18 +18,6 @@ const adminUsers = [
       coordinates: [0, 0], // Default location
     },
     bio: "System Administrator",
-  },
-  {
-    name: "Moderator Admin",
-    email: "moderator@booklink.com",
-    password: "Moderator@123456",
-    role: "moderator",
-    isApproved: true,
-    location: {
-      type: "Point",
-      coordinates: [0, 0],
-    },
-    bio: "Content Moderator",
   },
 ];
 
@@ -44,16 +32,16 @@ const seedAdmins = async () => {
       const existingAdmin = await Reader.findOne({ email: adminData.email });
 
       if (existingAdmin) {
-        console.log(`  Admin already exists: ${adminData.email}`);
+        console.log(`Admin already exists: ${adminData.email}`);
         continue;
       }
 
       // Create new admin
       const admin = await Reader.create(adminData);
-      console.log(`Admin created: ${admin.email} (${admin.role})`);
+      console.log(` Admin created: ${admin.email} (${admin.role})`);
     }
 
-    console.log(" Admin seeding completed!");
+    console.log("\n Admin seeding completed!");
     console.log("\n Login Credentials:");
     console.log("================================");
     adminUsers.forEach((admin) => {

@@ -1,6 +1,6 @@
 import express from "express";
 import { protect } from "../middleware/auth.js";
-import { isAdmin, isModerator } from "../middleware/adminAuth.js";
+import { isAdmin } from "../middleware/adminAuth.js";
 import {
   // Dashboard
   getDashboardStats,
@@ -32,30 +32,31 @@ const router = express.Router();
 
 // All routes require authentication and admin role
 router.use(protect);
+router.use(isAdmin);
 
 // ==================== DASHBOARD ====================
-router.get("/dashboard/stats", isAdmin, getDashboardStats);
+router.get("/dashboard/stats", getDashboardStats);
 
 // ==================== USER MANAGEMENT ====================
-router.get("/users", isAdmin, getAllUsers);
-router.get("/users/pending", isModerator, getPendingUsers);
-router.put("/users/:id/approve", isModerator, approveUser);
-router.put("/users/:id/toggle-status", isAdmin, toggleUserStatus);
-router.delete("/users/:id", isAdmin, deleteUser);
+router.get("/users", getAllUsers);
+router.get("/users/pending", getPendingUsers);
+router.put("/users/:id/approve", approveUser);
+router.put("/users/:id/toggle-status", toggleUserStatus);
+router.delete("/users/:id", deleteUser);
 
 // ==================== BOOK MANAGEMENT ====================
-router.get("/books", isModerator, getAllBooksAdmin);
-router.get("/books/pending", isModerator, getPendingBooks);
-router.put("/books/:id/approve", isModerator, approveBook);
-router.put("/books/:id/reject", isModerator, rejectBook);
-router.put("/books/:id/toggle-featured", isAdmin, toggleFeaturedBook);
-router.delete("/books/:id", isAdmin, deleteBookAdmin);
+router.get("/books", getAllBooksAdmin);
+router.get("/books/pending", getPendingBooks);
+router.put("/books/:id/approve", approveBook);
+router.put("/books/:id/reject", rejectBook);
+router.put("/books/:id/toggle-featured", toggleFeaturedBook);
+router.delete("/books/:id", deleteBookAdmin);
 
 // ==================== TRANSACTION MANAGEMENT ====================
-router.get("/transactions", isAdmin, getAllTransactions);
+router.get("/transactions", getAllTransactions);
 
 // ==================== REVIEW MANAGEMENT ====================
-router.get("/reviews", isModerator, getAllReviews);
-router.delete("/reviews/:id", isModerator, deleteReviewAdmin);
+router.get("/reviews", getAllReviews);
+router.delete("/reviews/:id", deleteReviewAdmin);
 
 export default router;
