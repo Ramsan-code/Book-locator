@@ -52,7 +52,7 @@ const bookSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-    // ✨ NEW: Approval system for books
+    //  NEW: Approval system for books
     isApproved: {
       type: Boolean,
       default: false, // Books need admin approval
@@ -72,12 +72,12 @@ const bookSchema = new mongoose.Schema(
     rejectionReason: {
       type: String,
     },
-    // ✨ NEW: Featured by admin
+    //  NEW: Featured by admin
     isFeatured: {
       type: Boolean,
       default: false,
     },
-    // ✨ NEW: Views counter
+    //  NEW: Views counter
     views: {
       type: Number,
       default: 0,

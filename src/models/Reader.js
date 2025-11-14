@@ -20,23 +20,23 @@ const readerSchema = new mongoose.Schema(
       minlength: 6,
       select: false,
     },
-    // ✨ NEW: Role field for admin system
+    //  NEW: Role field for admin system
     role: {
       type: String,
       enum: ["user", "moderator", "admin"],
       default: "user",
     },
-    // ✨ NEW: Approval status
+    //  NEW: Approval status
     isApproved: {
       type: Boolean,
       default: false, // Users need approval by default
     },
-    // ✨ NEW: Account status
+    //  NEW: Account status
     isActive: {
       type: Boolean,
       default: true,
     },
-    // ✨ NEW: Approval details
+    // NEW: Approval details
     approvedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Reader",
@@ -57,7 +57,7 @@ const readerSchema = new mongoose.Schema(
     },
     bio: String,
     avatar: String,
-    // ✨ NEW: Track last login
+    // NEW: Track last login
     lastLogin: {
       type: Date,
     },
@@ -78,12 +78,12 @@ readerSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-// ✨ NEW: Check if user is admin
+//  NEW: Check if user is admin
 readerSchema.methods.isAdmin = function () {
   return this.role === "admin";
 };
 
-// ✨ NEW: Check if user is moderator or admin
+//  NEW: Check if user is moderator or admin
 readerSchema.methods.isModerator = function () {
   return this.role === "moderator" || this.role === "admin";
 };
